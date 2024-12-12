@@ -74,45 +74,54 @@
     <img src="{{ url_for('static', filename='images/desk.png') }}" alt="Image of a desk">
     <!-- Person images will be dynamically added here -->
   </div>
-
   <script>
-    // Function to fetch and update queue data from the real API
+    let currentServingNumber = null; // Keep track of the current serving number
+  
+    // Function to fetch and update queue data
     function fetchQueueData() {
-      $.get('/queue/people', function(data) {
+      $.get('/queue/people', function (data) {
         const container = $('.queue-container');
         container.find('.person').remove(); // Clear existing person elements
-
-        let furthestQueueNumber = null; // Variable to store the furthest queue number
-
-        // Loop through the queue data
-        data.forEach(function(item) {
+  
+        if (data.length === 0) {
+          // If the queue is empty, reset current serving number and display
+          currentServingNumber = null;
+          $('.queue-number-display').text(''); // Clear the top-left display
+          return;
+        }
+  
+        // Get all the queue numbers from the data, sorted in ascending order
+        const queueNumbers = data.map(item => parseInt(item.queue_number)).sort((a, b) => a - b);
+  
+        // If the current serving number is null (initial state) or no longer exists in the queue
+        if (currentServingNumber === null || !queueNumbers.includes(currentServingNumber)) {
+          // Set it to the lowest number in the queue (oldest person being served)
+          currentServingNumber = queueNumbers[0];
+        }
+  
+        // Format the current serving number to always display two digits (e.g., 01 instead of 1)
+        const formattedQueueNumber = currentServingNumber.toString().padStart(2, '0');
+  
+        // Display the current serving number in the top-left corner
+        $('.queue-number-display').text(`${formattedQueueNumber}`);
+  
+        // Render the queue visually
+        data.forEach(function (item) {
           const personDiv = `
             <div class="person">
               <img src="/static/images/person.png" alt="Person ${item.queue_number}">
               <div class="queue-number">${item.queue_number}</div>
             </div>`;
           container.append(personDiv); // Add the person to the container
-
-          // Update the furthest queue number
-          if (!furthestQueueNumber || parseInt(item.queue_number) > parseInt(furthestQueueNumber)) {
-            furthestQueueNumber = item.queue_number;
-          }
         });
-
-        // Display the furthest queue number at the top-left corner if there is a queue number
-        if (furthestQueueNumber) {
-          $('.queue-number-display').text(`${furthestQueueNumber}`);
-        } else {
-          $('.queue-number-display').text(''); // Clear if no one is in the queue
-        }
-      }).fail(function(error) {
+      }).fail(function (error) {
         console.error('Error fetching queue data:', error);
       });
     }
-
+  
     // Fetch queue data every 2 seconds
     setInterval(fetchQueueData, 2000);
-
+  
     // Initial fetch on page load
     fetchQueueData();
   </script>
