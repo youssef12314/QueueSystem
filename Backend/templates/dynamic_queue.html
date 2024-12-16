@@ -3,30 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dynamic Queue</title>
+  <title>Dynamic Queue with Animation</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       display: flex;
-      justify-content: flex-start; /* Align items to the start (left) */
-      align-items: center; /* Vertically center items */
+      justify-content: flex-start;
+      align-items: center;
       height: 100vh;
       margin: 0;
       background-color: #f0f0f0;
-      padding-left: 10%; /* Optional: Add some padding from the left edge */
+      padding-left: 10%;
     }
 
     .queue-container {
       display: flex;
       align-items: center;
-      gap: 20px; /* Space between items */
-      width: auto;
-      max-width: 5%; /* Make the desk image smaller */
-      height: auto;
-    }
-
-    img {
+      gap: 20px;
       width: auto;
       height: auto;
     }
@@ -35,25 +29,38 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .person.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .person.hide {
+      opacity: 0;
+      transform: scale(0.8);
     }
 
     .person img {
-      width: 600px;  /* Increase the width */
-      height: 600px; /* Increase the height */
-      object-fit: contain; /* Ensures the whole image is visible */
+      width: 600px;
+      height: 600px;
+      object-fit: contain;
       border-radius: 50%;
-      margin-top: 70px; /* Move the image slightly down */
+      margin-top: 70px;
     }
 
     .person .queue-number {
       font-weight: bold;
-      margin-top: -30px; /* Move the queue number closer to the image */
-      color: white; /* Ensure the text is visible */
-      font-size: 95px; /* Adjust font size if needed */
+      margin-top: -30px;
+      color: white;
+      font-size: 95px;
       position: absolute;
       top: 50%;
-      transform: translateY(-50%); /* Center the text vertically */
-      -webkit-text-stroke: 2px black; /* Adds the black outline */
+      transform: translateY(-50%);
+      -webkit-text-stroke: 2px black;
     }
 
     .queue-number-display {
@@ -62,9 +69,9 @@
       left: 20px;
       font-size: 500px;
       font-weight: bold;
-      color: white;  /* Set the text color */
+      color: white;
       padding: 5px 10px;
-      -webkit-text-stroke: 5px black; /* Adds the black outline */
+      -webkit-text-stroke: 5px black;
     }
   </style>
 </head>
@@ -72,56 +79,69 @@
   <div class="queue-number-display"></div>
   <div class="queue-container">
     <img src="{{ url_for('static', filename='images/desk.png') }}" alt="Image of a desk">
-    <!-- Person images will be dynamically added here -->
   </div>
   <script>
-    let currentServingNumber = null; // Keep track of the current serving number
-  
-    // Function to fetch and update queue data
+    let currentQueueNumbers = []; // Track the current queue state
+
     function fetchQueueData() {
       $.get('/queue/people', function (data) {
+        console.log('Fetched data:', data);
         const container = $('.queue-container');
-        container.find('.person').remove(); // Clear existing person elements
-  
-        if (data.length === 0) {
-          // If the queue is empty, reset current serving number and display
-          currentServingNumber = null;
-          $('.queue-number-display').text(''); // Clear the top-left display
-          return;
-        }
-  
-        // Get all the queue numbers from the data, sorted in ascending order
-        const queueNumbers = data.map(item => parseInt(item.queue_number)).sort((a, b) => a - b);
-  
-        // If the current serving number is null (initial state) or no longer exists in the queue
-        if (currentServingNumber === null || !queueNumbers.includes(currentServingNumber)) {
-          // Set it to the lowest number in the queue (oldest person being served)
-          currentServingNumber = queueNumbers[0];
-        }
-  
-        // Format the current serving number to always display two digits (e.g., 01 instead of 1)
-        const formattedQueueNumber = currentServingNumber.toString().padStart(2, '0');
-  
-        // Display the current serving number in the top-left corner
-        $('.queue-number-display').text(`${formattedQueueNumber}`);
-  
-        // Render the queue visually
-        data.forEach(function (item) {
-          const personDiv = `
-            <div class="person">
-              <img src="/static/images/person.png" alt="Person ${item.queue_number}">
-              <div class="queue-number">${item.queue_number}</div>
-            </div>`;
-          container.append(personDiv); // Add the person to the container
+        const newQueueNumbers = data.map(item => item.queue_number);
+
+        // Handle people joining the queue
+        newQueueNumbers.forEach(number => {
+          if (!currentQueueNumbers.includes(number)) {
+            console.log(`Person ${number} joining the queue.`);
+            const personDiv = $(`
+              <div class="person" data-queue-number="${number}">
+                <img src="/static/images/person.png" alt="Person ${number}">
+                <div class="queue-number">${number}</div>
+              </div>
+            `);
+            container.append(personDiv);
+
+            // Trigger show animation
+            setTimeout(() => {
+              personDiv.addClass('show');
+              console.log(`Show animation triggered for person ${number}.`);
+            }, 50); // Slight delay to ensure the DOM is updated
+          }
         });
+
+        // Handle people leaving the queue
+        currentQueueNumbers.forEach(number => {
+          if (!newQueueNumbers.includes(number)) {
+            console.log(`Person ${number} leaving the queue.`);
+            const personDiv = container.find(`.person[data-queue-number="${number}"]`);
+            personDiv.addClass('hide'); // Trigger hide animation
+
+            // Remove from DOM after animation
+            setTimeout(() => {
+              personDiv.remove();
+              console.log(`Person ${number} removed from DOM.`);
+            }, 1000); // Matches the CSS transition duration
+          }
+        });
+
+        // Update the current queue state
+        currentQueueNumbers = newQueueNumbers;
+        console.log('Updated queue state:', currentQueueNumbers);
+
+        // Update the display for the first queue number
+        if (currentQueueNumbers.length > 0) {
+          $('.queue-number-display').text(currentQueueNumbers[0]);
+        } else {
+          $('.queue-number-display').text('');
+        }
       }).fail(function (error) {
         console.error('Error fetching queue data:', error);
       });
     }
-  
+
     // Fetch queue data every 2 seconds
     setInterval(fetchQueueData, 2000);
-  
+
     // Initial fetch on page load
     fetchQueueData();
   </script>
