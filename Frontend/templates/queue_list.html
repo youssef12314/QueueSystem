@@ -51,8 +51,13 @@
             $.post('/queue/next', function() {
                 // After successfully processing, update the queue data
                 fetchQueueData();
-            }).fail(function(error) {
-                alert('Error: ' + error.responseJSON.error);
+            }).fail(function(xhr, status, error) {
+                try {
+                    let errorMessage = xhr.responseJSON ? xhr.responseJSON.error : "Unknown error occurred";
+                    alert('Error: ' + errorMessage);
+                } catch (e) {
+                    alert('Error: ' + error);
+                }
             });
         });
     
