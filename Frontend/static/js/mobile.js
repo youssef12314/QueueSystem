@@ -1,19 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Queue</title>
-</head>
-<body>
-    <h1>Your Queue Number: <span id="queue-number">Loading...</span></h1>
-    <h2>Your Current Position: <span id="queue-position">Loading...</span></h2>
-    <h3>Estimated Waiting Time: <span id="waiting-time">Calculating...</span> minutes</h3>
-    <form action="{{ url_for('leave_queue') }}" method="POST">
-        <button type="submit">Leave Queue</button>
-    </form>
-
-    <script>
 async function fetchQueueStatus() {
     try {
         const response = await fetch('/queue/my_status');
@@ -67,6 +51,3 @@ async function fetchQueueStatus() {
 
         // Initial fetch on page load
         fetchQueueStatus();
-    </script>
-</body>
-</html>
