@@ -5,67 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Queue List</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
-        button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-    </style>
+    <link rel="stylesheet" href="/static/css/queue_style.css">
 </head>
 <body>
-    <h1>People in Queue</h1>
-    <table id="queue-table">
-        <thead>
-            <tr>
-                <th>Queue Number</th>
-                <th>Current Position</th>
-                <th>Joined At</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Queue data will be inserted here -->
-        </tbody>
-    </table>
-
-    <button id="next-button">Next</button>
-
-    <script>
-        function fetchQueueData() {
-            $.get('/queue/people', function(data) {
-                let tbody = $('#queue-table tbody');
-                tbody.empty();  // Clear existing rows
-        
-                // Loop through the queue data and add it to the table
-                data.forEach(function(item) {
-                    let row = `<tr>
-                        <td>${item.queue_number}</td>
-                        <td>${item.current_position}</td>
-                        <td>${item.joined_at}</td>
-                    </tr>`;
-                    tbody.append(row);
-                });
-            });
-        }
-    
-        $('#next-button').click(function() {
-            $.post('/queue/next', function() {
-                // After successfully processing, update the queue data
-                fetchQueueData();
-            }).fail(function(xhr, status, error) {
-                try {
-                    let errorMessage = xhr.responseJSON ? xhr.responseJSON.error : "Unknown error occurred";
-                    alert('Error: ' + errorMessage);
-                } catch (e) {
-                    alert('Error: ' + error);
-                }
-            });
-        });
-    
-        // Fetch queue data every 2 seconds
-        setInterval(fetchQueueData, 2000);
-        
-        // Initial fetch on page load
-        fetchQueueData();
-    </script>
+    <div class="container">
+        <h1>People in Queue</h1>
+        <table id="queue-table">
+            <thead>
+                <tr>
+                    <th>Queue Number</th>
+                    <th>Current Position</th>
+                    <th>Joined At</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Queue data will be inserted here -->
+            </tbody>
+        </table>
+        <button id="next-button">Next</button>
+    </div>
+    <script src="/static/js/queue_list.js"></script>
 </body>
 </html>

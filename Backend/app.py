@@ -16,14 +16,14 @@ app.register_blueprint(queue_bp, url_prefix='/queue')
 # Home page to display the "You're Next" page
 @app.route('/')
 def home():
-    return render_template('youre_next.html')  # Replace with your desired home page template
+    return render_template('youre_next.html')  
 
 # Generate a static QR code with a fixed URL
 @app.route('/queue/qr_code', methods=['GET'])
 def generate_qr_code():
     try:
         # Define the static URL for the queue join endpoint
-        static_url = 'https://cecb-128-76-247-146.ngrok-free.app/queue/join'
+        static_url = 'https://da9e-128-76-247-146.ngrok-free.app/queue/join'
 
         # Create the QR code
         qr = qrcode.QRCode(version=1, box_size=10, border=5)
