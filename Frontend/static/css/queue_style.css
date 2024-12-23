@@ -8,7 +8,7 @@ body {
 .container {
     width: 80%;
     max-width: 1000px;
-    margin: 20px auto; /* Aligns the container horizontally at the top */
+    margin: 20px auto; 
     padding: 30px;
     background-color: #fff;
     border-radius: 8px;
@@ -19,7 +19,7 @@ h1 {
     color: #333;
     font-size: 2.5em;
     margin-bottom: 20px;
-    text-align: left; /* Align header text to the left */
+    text-align: left; 
 }
 
 table {
