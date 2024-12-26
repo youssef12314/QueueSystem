@@ -52,3 +52,40 @@ p {
     background-color: #4b6fe9;
     transform: scale(1.05);
 }
+
+/* QR container */
+.qr-container {
+    text-align: center;
+    padding: 30px 50px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* QR title */
+.qr-title {
+    font-size: 2rem; /* Smaller font size for QR heading */
+    color: #333; /* Dark gray for readability */
+    margin-bottom: 20px;
+    padding: 0 15px; /* Padding for smaller screens */
+}
+
+/* QR image */
+.qr-image {
+    max-width: 90%;
+    height: auto;
+    border: 5px solid #4b6fe9;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+    .qr-title {
+        font-size: 2.5rem;
+    }
+
+    .qr-image {
+        max-width: 300px;
+    }
+}
