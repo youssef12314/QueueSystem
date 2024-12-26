@@ -81,3 +81,17 @@ button:hover {
         font-size: 3em;
     }
 }
+
+/* Footer with Trademark */
+.trademark-image {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 150px; /* Adjust size of the image */
+    opacity: 0.8; /* Slight transparency */
+}
+
+.trademark-image:hover {
+    opacity: 1; /* Full visibility on hover */
+}
