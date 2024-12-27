@@ -28,8 +28,8 @@ def join_queue():
                 formatted_queue_number = f"{new_queue_number:02d}"
 
                 cursor.execute(
-                    "INSERT INTO customers (queue_number, session_id, joined_at, last_active) VALUES (%s, %s, %s, %s)",
-                    (formatted_queue_number, session_id, datetime.now(), datetime.now())
+                    "INSERT INTO customers (queue_number, session_id, joined_at) VALUES (%s, %s, %s)",
+                    (formatted_queue_number, session_id, datetime.now())
                 )
                 db.commit()
                 queue_number = formatted_queue_number
@@ -55,6 +55,7 @@ def join_queue():
     except Exception as e:
         logging.error(f"Unexpected error in join_queue: {str(e)}")
         return jsonify({"error": "Unexpected error."}), 500
+
 
 @queue_bp.route('/api/queue_status', methods=['GET'])
 def queue_status():
@@ -105,26 +106,6 @@ def leave_queue():
         response = make_response(redirect(url_for('nice_day')))
         response.delete_cookie('session_id')
         return response
-
-    except MySQLError as err:
-        logging.error(f"Database error: {err}")
-        return jsonify({"error": "Database error."}), 500
-
-
-@queue_bp.route('/heartbeat', methods=['POST'])
-def heartbeat():
-    try:
-        session_id = request.cookies.get('session_id')
-        if session_id:
-            with get_db_connection() as db, db.cursor() as cursor:
-                cursor.execute(
-                    "UPDATE customers SET last_active = %s WHERE session_id = %s",
-                    (datetime.now(), session_id)
-                )
-                db.commit()
-            return jsonify({"message": "Heartbeat updated."})
-
-        return jsonify({"error": "No session ID found."}), 400
 
     except MySQLError as err:
         logging.error(f"Database error: {err}")
