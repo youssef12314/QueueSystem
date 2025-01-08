@@ -60,7 +60,7 @@ button {
     transition: background-color 0.3s ease;
     width: 150px;
     margin-top: 10px;
-    float: right; /* Aligns the button to the right */
+    float: right; 
 }
 
 button:hover {
