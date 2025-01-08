@@ -1,9 +1,9 @@
 function fetchQueueData() {
     $.get('/queue/people', function(data) {
         let tbody = $('#queue-table tbody');
-        tbody.empty();  // Clear existing rows
+        tbody.empty();  
 
-        // Loop through the queue data and add it to the table
+        
         data.forEach(function(item) {
             let row = `<tr>
                 <td>${item.queue_number}</td>
@@ -16,7 +16,7 @@ function fetchQueueData() {
 }
 $('#next-button').click(function() {
     $.post('/queue/next', function() {
-        // After successfully processing, update the queue data
+        
         fetchQueueData();
     }).fail(function(xhr, status, error) {
         try {
@@ -28,8 +28,7 @@ $('#next-button').click(function() {
     });
 });
 
-// Fetch queue data every 2 seconds
+
 setInterval(fetchQueueData, 2000);
 
-// Initial fetch on page load
 fetchQueueData();
