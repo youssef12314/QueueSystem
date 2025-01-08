@@ -1,16 +1,15 @@
-/* General styles */
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f8ff; /* Light blue background */
+    background-color: #f0f8ff; 
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Full screen height */
+    min-height: 100vh; 
 }
 
-/* .container styles */
+
 .container {
     text-align: center;
     padding: 30px 50px;
@@ -19,21 +18,20 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Heading styles */
+
 h1 {
     font-size: 3em;
-    color: #4b6fe9; /* Color for headings */
+    color: #4b6fe9; 
     margin: 0;
 }
 
-/* Paragraph styles */
+
 p {
     font-size: 1.5em;
-    color: #555; /* Complementary text color */
+    color: #555; 
     margin-top: 15px;
 }
 
-/* Button styles */
 .button {
     margin-top: 20px;
     padding: 12px 25px;
@@ -53,7 +51,6 @@ p {
     transform: scale(1.05);
 }
 
-/* QR container */
 .qr-container {
     text-align: center;
     padding: 30px 50px;
@@ -62,15 +59,14 @@ p {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* QR title */
 .qr-title {
-    font-size: 2rem; /* Smaller font size for QR heading */
-    color: #333; /* Dark gray for readability */
+    font-size: 2rem; 
+    color: #333; 
     margin-bottom: 20px;
-    padding: 0 15px; /* Padding for smaller screens */
+    padding: 0 15px; 
 }
 
-/* QR image */
+
 .qr-image {
     max-width: 90%;
     height: auto;
@@ -79,7 +75,7 @@ p {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive adjustments */
+
 @media (min-width: 768px) {
     .qr-title {
         font-size: 2.5rem;
@@ -90,16 +86,16 @@ p {
     }
 }
 
-/* Footer with Trademark */
+
 .trademark-image {
     position: fixed;
     bottom: 10px;
     left: 50%;
     transform: translateX(-50%);
-    max-width: 150px; /* Adjust size of the image */
-    opacity: 0.8; /* Slight transparency */
+    max-width: 150px; 
+    opacity: 0.8; 
 }
 
 .trademark-image:hover {
-    opacity: 1; /* Full visibility on hover */
+    opacity: 1; 
 }
