@@ -3,7 +3,6 @@ from mysql.connector import pooling, Error as MySQLError
 from datetime import datetime, timedelta
 import time
 
-# Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # MySQL connection pool configuration
@@ -13,7 +12,7 @@ try:
         pool_size=5,
         host="localhost",
         user="root",
-        password="X94nunecayjnc",  # Ensure this is secured and not hardcoded in production.
+        password="X94nunecayjnc",  
         database="queue_management"
     )
     logging.info("Database connection pool initialized successfully.")
