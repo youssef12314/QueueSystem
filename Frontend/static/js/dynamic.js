@@ -18,34 +18,34 @@
             `);
             container.append(personDiv);
 
-            // Trigger show animation
+            
             setTimeout(() => {
               personDiv.addClass('show');
               console.log(`Show animation triggered for person ${number}.`);
-            }, 50); // Slight delay to ensure the DOM is updated
+            }, 50); 
           }
         });
 
-        // Handle people leaving the queue
+        
         currentQueueNumbers.forEach(number => {
           if (!newQueueNumbers.includes(number)) {
             console.log(`Person ${number} leaving the queue.`);
             const personDiv = container.find(`.person[data-queue-number="${number}"]`);
-            personDiv.addClass('hide'); // Trigger hide animation
+            personDiv.addClass('hide'); 
 
-            // Remove from DOM after animation
+           
             setTimeout(() => {
               personDiv.remove();
               console.log(`Person ${number} removed from DOM.`);
-            }, 1000); // Matches the CSS transition duration
+            }, 1000); 
           }
         });
 
-        // Update the current queue state
+        
         currentQueueNumbers = newQueueNumbers;
         console.log('Updated queue state:', currentQueueNumbers);
 
-        // Update the display for the first queue number
+        
         if (currentQueueNumbers.length > 0) {
           $('.queue-number-display').text(currentQueueNumbers[0]);
         } else {
@@ -56,8 +56,8 @@
       });
     }
 
-    // Fetch queue data every 2 seconds
+   
     setInterval(fetchQueueData, 2000);
 
-    // Initial fetch on page load
+   
     fetchQueueData();
