@@ -15,7 +15,6 @@ def join_queue():
             session_id = str(uuid.uuid4())
 
         with get_db_connection() as db, db.cursor(dictionary=True) as cursor:
-            # Check if the user is already in the queue
             cursor.execute("SELECT queue_number FROM customers WHERE session_id = %s", (session_id,))
             existing_customer = cursor.fetchone()
 
@@ -36,7 +35,6 @@ def join_queue():
 
         response = make_response(render_template('mobile.html', queue_number=queue_number))
 
-        # Debug URL resolution
         try:
             leave_queue_url = url_for('queue.leave_queue', _external=True)
             logging.debug(f"Resolved leave_queue URL: {leave_queue_url}")
@@ -133,7 +131,6 @@ def my_status():
                 queue_number = result['queue_number']
                 dynamic_position = result['dynamic_position']
                 
-                # Calculate the total waiting time for customers ahead
                 cursor.execute("""
                     SELECT SUM(service_time) AS total_waiting_time
                     FROM customers
@@ -141,7 +138,6 @@ def my_status():
                 """, (queue_number,))
                 total_waiting_time = cursor.fetchone()['total_waiting_time'] or 0
 
-                # Calculate the average estimated waiting time per dynamic position
                 estimated_waiting_time = total_waiting_time / max(dynamic_position, 1)  # Avoid division by 0
                 
                 return jsonify({
@@ -164,7 +160,6 @@ def get_queue():
             cursor.execute("SELECT queue_number, joined_at FROM customers ORDER BY joined_at ASC")
             customers = cursor.fetchall()
 
-        # Add current_position based on order and format queue_number with leading zero
         queue_data = [
             {
                 "queue_number": f"{customer['queue_number']:02d}",
@@ -188,18 +183,15 @@ def get_queue():
 def next_customer():
     try:
         with get_db_connection() as db, db.cursor(dictionary=True) as cursor:
-            # Get the first customer in the queue
             cursor.execute("SELECT id, queue_number, session_id FROM customers ORDER BY queue_number ASC LIMIT 1 FOR UPDATE")
             first_customer = cursor.fetchone()
 
             if not first_customer:
                 return jsonify({"error": "No customers in the queue."}), 404
 
-            # Remove the first customer
             cursor.execute("DELETE FROM customers WHERE id = %s", (first_customer['id'],))
             db.commit()
 
-            # No need to reorder queue numbers if they're not reused
             return jsonify({"message": f"Customer {first_customer['queue_number']} has been served."})
     except MySQLError as err:
         logging.error(f"Database error in next_customer: {err}")
@@ -217,7 +209,7 @@ def reorder_positions(db, cursor):
         logging.debug(f"Customers before reordering: {customers}")
 
         for index, customer in enumerate(customers):
-            new_queue_number = index + 1  # Start from 1
+            new_queue_number = index + 1  
             cursor.execute(
                 "UPDATE customers SET queue_number = %s WHERE id = %s",
                 (new_queue_number, customer['id'])
